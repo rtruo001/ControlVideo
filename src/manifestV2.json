@@ -1,0 +1,18 @@
+{
+  "name": "ControlVideo",
+  "description": "Plays or pauses video with timers and eventually through voice",
+  "version": "1.0",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs" 
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+}

@@ -1,3 +1,5 @@
+import "./timer.css"
+
 const timerText = document.getElementById("timerText");
 const timerHour = document.getElementById("timerHour");
 const timerMinute = document.getElementById("timerMinute");
@@ -16,11 +18,12 @@ var buttonClickCallback = async (type) => {
     updateTimerDisplay(res.timer);
   });
 }
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   buttonClickCallback('getTime')
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  await chrome.runtime.sendMessage({ type: 'getChromeTab', tabID: tab.id }, (res) => {
-    updateTimerDisplay(res.timer);
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
+    chrome.runtime.sendMessage({ type: 'getChromeTab', tabID: tab[0].id }, (res) => {
+      updateTimerDisplay(res.timer);
+    });
   });
 });
 startTimerButton.addEventListener("click", () => buttonClickCallback('start'));

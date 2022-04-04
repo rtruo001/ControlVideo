@@ -1,4 +1,6 @@
 const ONE_SECOND = 1000;
+const MANIFEST_V2 = 2;
+const MANIFEST_V3 = 3;
 
 class Timer {
   constructor() {
@@ -21,17 +23,15 @@ class Timer {
   }
 
   tick() {
+    // TODO: Possible other methods in preventing long term persistence.
+    // This line is to prevent background.js from persistenting after the timer ends.
+    // chrome.runtime.getBackgroundPage();
+
     if (this.timeLeft <= 0) {
       this.resetTimer();
-      if (this.tabID === null) return;
-      chrome.scripting.executeScript({
-        target: { tabId: this.tabID },
-        function: setVideoState,
-      });
-      console.log("Timer Done");
+      this.timerPausesVideo();
       return;
     }
-
     this.timeLeft--;
     chrome.runtime.sendMessage({
       type: 'update',
@@ -41,6 +41,25 @@ class Timer {
         second: timer.getSecond
       }
     });
+  }
+
+  timerPausesVideo() {
+    let { manifest_version } = chrome.runtime.getManifest()
+    if (manifest_version === MANIFEST_V2) {
+      let iifeCodeStr = `(${pauseVideoState.toString()})()`;
+      chrome.tabs.executeScript(
+        this.tabID,
+        { code: iifeCodeStr },
+        () => { console.log("V2 Timer Done") }
+      )
+    } else {
+      if (this.tabID === null) return;
+      chrome.scripting.executeScript({
+        target: { tabId: this.tabID },
+        function: pauseVideoState,
+      });
+      console.log("V3 Timer Done");
+    }
   }
 
   setTabID(id) {
@@ -97,7 +116,6 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 
   switch (type) {
     case 'getChromeTab':
-      console.log(tabID);
       timer.setTabID(tabID)
       break;
     case 'getTime':
@@ -140,9 +158,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 });
 
 // Pauses video, function that gets injected
-function setVideoState() {
+function pauseVideoState() {
   let videos = document.getElementsByTagName('video')
   for (let video of videos) {
     video.pause();
   }
+  console.log('Video Paused');
 }

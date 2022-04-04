@@ -1,0 +1,28 @@
+{
+  "name": "controlvideo",
+  "version": "1.0.0",
+  "description": "Package manager for Chrome Extensions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rtruo001/ControlVideo.git"
+  },
+  "author": "Randy Truong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rtruo001/ControlVideo/issues"
+  },
+  "homepage": "https://github.com/rtruo001/ControlVideo#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^10.2.4",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-extension-manifest-plugin": "^0.8.0"
+  }
+}
